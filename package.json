@@ -1,5 +1,5 @@
 {
-  "name": "netsuite-upload",
+  "name": "@hmsdevelopment/netsuite-upload",
   "displayName": "NetSuite Upload",
   "description": "Upload and download NetSuite SuiteScript files and folders.",
   "version": "1.0.0",
@@ -32,7 +32,7 @@
     "onCommand:netsuite-upload.addNSDependency",
     "onCommand:netsuite-upload.getRestletVersion"
   ],
-  "main": "./extension",
+  "main": "./extension.js",
   "contributes": {
     "configuration": {
       "type": "object",

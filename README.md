@@ -1,9 +1,5 @@
 ## netsuite-upload VS Code plugin
 
-[![Version](https://vsmarketplacebadge.apphb.com/version/nsupload-org.netsuite-upload.svg)](https://marketplace.visualstudio.com/items?itemName=nsupload-org.netsuite-upload)
-
-**netsuite-upload** is a Visual Studio Code extension that allows you to manage your SuiteScript files directly from VS Code. It also helps you with defining new modules and adding server-side module dependecies.
-
 ## Features
 
 ### 1. Push and Pull Files and Folders between VS Code and the NetSuite File Cabinet
@@ -46,7 +42,7 @@ To be able to push and pull folders and files to NetSuite, this extension requir
 
 You'll need to know how to publish a script and do a script deployment in NetSuite to make it work. Consult the NetSuite docs if this is new to you.
 
-- [Download a copy of the RESTlet from here](https://github.com/netsuite-upload-org/netsuite-upload/blob/master/netSuiteRestlet/vscodeExtensionRestlet.js) (use `Raw` view to copy/paste).
+- [Download a copy of the RESTlet from here](https://github.com/hmsmarketingservices/netsuite-upload/blob/master/netSuiteRestlet/vscodeExtensionRestlet.js) (use `Raw` view to copy/paste).
 - Upload the `vscodeExtensionRestlet.js` file to somewhere in your `SuiteScripts` file cabinet folder in NetSuite.
 - Create a new Script record for this RESTlet.
 - Create a new Script Deployment for this Script. Note the URL.
@@ -61,9 +57,13 @@ You'll need to know how to publish a script and do a script deployment in NetSui
 
 ### Install the VS Code Extension
 
-The extension can be installed from the VS Code Extensions Marketplace within VS Code.
+The extension can be installed from the Github Repository.
 
-The Marketplace URL is https://marketplace.visualstudio.com/items?itemName=nsupload-org.netsuite-upload
+The command is:
+
+```javascript
+npm i https://github.com/hmsmarketingservices/netsuite-upload.git
+```
 
 ### VSCode - Open Folder
 
