@@ -1,148 +1,181 @@
-let vscode = require('vscode');
-let netSuiteBl = require('./bl/netSuiteBl');
+const vscode = require("vscode");
+const netSuiteBl = require("./bl/netSuiteBl");
 
-function activate(context) {
-    console.log('Extension "netsuite-upload" is now active!');
+export function activate(context) {
+    console.log('Extension "@hmsdevelopment/netsuite-upload" is now active!');
 
-    let noProjectOpenedErrorMessage = 'No project is opened. Please open root folder. (SuiteScripts)';
-    let noFileSelectedErrorMessage = 'No file selected. Please right-click the file and select action from context menu.';
+    const noProjectOpenedErrorMessage =
+        "No project is opened. Please open root folder. (SuiteScripts)";
+    const noFileSelectedErrorMessage =
+        "No file selected. Please right-click the file and select action from context menu.";
 
-    let downloadFileDisposable = vscode.commands.registerCommand('netsuite-upload.downloadFile', (file) => {
-        if (!file) {
-            vscode.window.showErrorMessage(noFileSelectedErrorMessage);
-            return;
+    const downloadFileDisposable = vscode.commands.registerCommand(
+        "netsuite-upload.downloadFile",
+        (file) => {
+            if (!file) {
+                vscode.window.showErrorMessage(noFileSelectedErrorMessage);
+                return;
+            }
+
+            // Root SuiteScript folder has to be opened
+            if (!vscode.workspaceFolders) {
+                vscode.window.showErrorMessage(noProjectOpenedErrorMessage);
+                return;
+            }
+
+            netSuiteBl.downloadFileFromNetSuite(file);
         }
-
-        // Root SuiteScript folder has to be opened
-        if (!vscode.workspace.rootPath) {
-            vscode.window.showErrorMessage(noProjectOpenedErrorMessage);
-            return;
-        }
-
-        netSuiteBl.downloadFileFromNetSuite(file);
-    });
+    );
     context.subscriptions.push(downloadFileDisposable);
 
-    let previewFileDisposable = vscode.commands.registerCommand('netsuite-upload.previewFile', (file) => {
-        if (!file) {
-            vscode.window.showErrorMessage(noFileSelectedErrorMessage);
-            return;
-        }
+    const previewFileDisposable = vscode.commands.registerCommand(
+        "netsuite-upload.previewFile",
+        (file) => {
+            if (!file) {
+                vscode.window.showErrorMessage(noFileSelectedErrorMessage);
+                return;
+            }
 
-        // Root SuiteScript folder has to be opened
-        if (!vscode.workspace.rootPath) {
-            vscode.window.showErrorMessage(noProjectOpenedErrorMessage);
-            return;
-        }
+            // Root SuiteScript folder has to be opened
+            if (!vscode.workspaceFolders) {
+                vscode.window.showErrorMessage(noProjectOpenedErrorMessage);
+                return;
+            }
 
-        netSuiteBl.previewFileFromNetSuite(file);
-    });
+            netSuiteBl.previewFileFromNetSuite(file);
+        }
+    );
     context.subscriptions.push(previewFileDisposable);
 
-    let uploadFileDisposable = vscode.commands.registerCommand('netsuite-upload.uploadFile', (file) => {
-        // Root SuiteScript folder has to be opened
-        if (!vscode.workspace.rootPath) {
-            vscode.window.showErrorMessage(noProjectOpenedErrorMessage);
-            return;
-        }
-
-        if (!file || !Object.keys(file).length) {
-            if (!vscode.window.activeTextEditor && !vscode.window.activeTextEditor.document.uri) {
-                vscode.window.showErrorMessage(noFileSelectedErrorMessage);
+    const uploadFileDisposable = vscode.commands.registerCommand(
+        "netsuite-upload.uploadFile",
+        (file) => {
+            // Root SuiteScript folder has to be opened
+            if (!vscode.workspaceFolders) {
+                vscode.window.showErrorMessage(noProjectOpenedErrorMessage);
                 return;
             }
-            else {
-                file = vscode.window.activeTextEditor.document.uri;
-            }
-        }
 
-        netSuiteBl.uploadFileToNetSuite(file);
-    });
+            if (!file || !Object.keys(file).length) {
+                if (
+                    !vscode.window.activeTextEditor &&
+                    !vscode.window.activeTextEditor.document.uri
+                ) {
+                    vscode.window.showErrorMessage(noFileSelectedErrorMessage);
+                    return;
+                } else {
+                    file = vscode.window.activeTextEditor.document.uri;
+                }
+            }
+
+            netSuiteBl.uploadFileToNetSuite(file);
+        }
+    );
     context.subscriptions.push(uploadFileDisposable);
 
-    let deleteFileDisposable = vscode.commands.registerCommand('netsuite-upload.deleteFile', (file) => {
-        if (!file) {
-            vscode.window.showErrorMessage(noFileSelectedErrorMessage);
-            return;
-        }
-
-        // Root SuiteScript folder has to be opened
-        if (!vscode.workspace.rootPath) {
-            vscode.window.showErrorMessage(noProjectOpenedErrorMessage);
-            return;
-        }
-
-        netSuiteBl.deleteFileInNetSuite(file);
-    });
-    context.subscriptions.push(deleteFileDisposable);
-
-    let uploadFolderDisposable = vscode.commands.registerCommand('netsuite-upload.uploadFolder', (directory) => {
-        // Root SuiteScript folder has to be opened
-        if (!vscode.workspace.workspaceFolders.length) {
-            vscode.window.showErrorMessage(noProjectOpenedErrorMessage);
-            return;
-        }
-
-        if (!directory || !Object.keys(directory).length) {
-            if (!vscode.window.activeTextEditor && !vscode.window.activeTextEditor.document.uri) {
+    const deleteFileDisposable = vscode.commands.registerCommand(
+        "netsuite-upload.deleteFile",
+        (file) => {
+            if (!file) {
                 vscode.window.showErrorMessage(noFileSelectedErrorMessage);
                 return;
             }
-            else {
-                let path = vscode.window.activeTextEditor.document.uri.path;
-                directory = vscode.Uri.file(path.substring(0, path.lastIndexOf("/")));
+
+            // Root SuiteScript folder has to be opened
+            if (!vscode.workspaceFolders) {
+                vscode.window.showErrorMessage(noProjectOpenedErrorMessage);
+                return;
             }
+
+            netSuiteBl.deleteFileInNetSuite(file);
         }
-        netSuiteBl.uploadDirectoryToNetSuite(directory);
-    });
+    );
+    context.subscriptions.push(deleteFileDisposable);
+
+    const uploadFolderDisposable = vscode.commands.registerCommand(
+        "netsuite-upload.uploadFolder",
+        (directory) => {
+            // Root SuiteScript folder has to be opened
+            if (!vscode.workspace.workspaceFolders.length) {
+                vscode.window.showErrorMessage(noProjectOpenedErrorMessage);
+                return;
+            }
+
+            if (!directory || !Object.keys(directory).length) {
+                if (
+                    !vscode.window.activeTextEditor &&
+                    !vscode.window.activeTextEditor.document.uri
+                ) {
+                    vscode.window.showErrorMessage(noFileSelectedErrorMessage);
+                    return;
+                } else {
+                    const path =
+                        vscode.window.activeTextEditor.document.uri.path;
+                    directory = vscode.Uri.file(
+                        path.substring(0, path.lastIndexOf("/"))
+                    );
+                }
+            }
+            netSuiteBl.uploadDirectoryToNetSuite(directory);
+        }
+    );
     context.subscriptions.push(uploadFolderDisposable);
 
-    let downloadFolderDisposable = vscode.commands.registerCommand('netsuite-upload.downloadFolder', (directory) => {
-        if (!directory) {
-            vscode.window.showErrorMessage('No directory selected.');
-            return;
-        }
+    const downloadFolderDisposable = vscode.commands.registerCommand(
+        "netsuite-upload.downloadFolder",
+        (directory) => {
+            if (!directory) {
+                vscode.window.showErrorMessage("No directory selected.");
+                return;
+            }
 
-        // Root SuiteScript folder has to be opened
-        if (!vscode.workspace.rootPath) {
-            vscode.window.showErrorMessage(noProjectOpenedErrorMessage);
-            return;
-        }
+            // Root SuiteScript folder has to be opened
+            if (!vscode.workspaceFolders) {
+                vscode.window.showErrorMessage(noProjectOpenedErrorMessage);
+                return;
+            }
 
-        netSuiteBl.downloadDirectoryFromNetSuite(directory);
-    });
+            netSuiteBl.downloadDirectoryFromNetSuite(directory);
+        }
+    );
     context.subscriptions.push(downloadFolderDisposable);
 
-    let addCustomDependencyDisposable = vscode.commands.registerCommand('netsuite-upload.addCustomDependency', () => {
-        let editor = vscode.window.activeTextEditor;
-        if (!editor) {
-            vscode.window.showErrorMessage('No file is opened.');
-            return;
-        }
+    const addCustomDependencyDisposable = vscode.commands.registerCommand(
+        "netsuite-upload.addCustomDependency",
+        () => {
+            const editor = vscode.window.activeTextEditor;
+            if (!editor) {
+                vscode.window.showErrorMessage("No file is opened.");
+                return;
+            }
 
-        netSuiteBl.addCustomDependencyToActiveFile(editor);
-    });
+            netSuiteBl.addCustomDependencyToActiveFile(editor);
+        }
+    );
     context.subscriptions.push(addCustomDependencyDisposable);
 
-    let addNSDependencyDisposable = vscode.commands.registerCommand('netsuite-upload.addNSDependency', () => {
-        let editor = vscode.window.activeTextEditor;
-        if (!editor) {
-            vscode.window.showErrorMessage('No file is opened.');
-            return;
-        }
+    const addNSDependencyDisposable = vscode.commands.registerCommand(
+        "netsuite-upload.addNSDependency",
+        () => {
+            const editor = vscode.window.activeTextEditor;
+            if (!editor) {
+                vscode.window.showErrorMessage("No file is opened.");
+                return;
+            }
 
-        netSuiteBl.addNetSuiteDependencyToActiveFile(editor);
-    });
+            netSuiteBl.addNetSuiteDependencyToActiveFile(editor);
+        }
+    );
     context.subscriptions.push(addNSDependencyDisposable);
 
-    let getRestletVersion = vscode.commands.registerCommand('netsuite-upload.getRestletVersion', () => {
-        netSuiteBl.getRestletVersion();
-    });
+    const getRestletVersion = vscode.commands.registerCommand(
+        "netsuite-upload.getRestletVersion",
+        () => {
+            netSuiteBl.getRestletVersion();
+        }
+    );
     context.subscriptions.push(getRestletVersion);
 }
-exports.activate = activate;
-
 // this method is called when your extension is deactivated
-function deactivate() {
-}
-exports.deactivate = deactivate;
+export function deactivate() {}
+

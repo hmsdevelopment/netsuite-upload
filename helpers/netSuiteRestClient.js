@@ -1,4 +1,4 @@
-import { workspace } from 'vscode';
+import { workspace, workspaceFolders } from 'vscode';
 import * as superAgent from 'superagent';
 import { createHmac } from 'crypto';
 import { join } from 'path';
@@ -10,11 +10,11 @@ const BAD_VERSION_ERROR = {
 };
 
 export function getRelativePath(absFilePath) {
-    var rootDirectory = workspace.getConfiguration('netSuiteUpload').rootDirectory;
+    const rootDirectory = workspace.getConfiguration('netSuiteUpload').rootDirectory;
     if (rootDirectory) {
-        return join(rootDirectory, absFilePath.slice(workspace.rootPath.length));
+        return join(rootDirectory, absFilePath.slice(workspaceFolders.length));
     } else {
-        return join('SuiteScripts', absFilePath.slice(workspace.rootPath.length));
+        return join('SuiteScripts', absFilePath.slice(workspaceFolders.length));
     }
 }
 
@@ -27,8 +27,8 @@ export function getDirectory(directory, callback) {
 }
 
 function getAuthHeader(method, data) {
-    var nlAuth = workspace.getConfiguration('netSuiteUpload').authentication;
-    var netSuiteOAuthKey = workspace.getConfiguration('netSuiteUpload').netSuiteKey;
+    const nlAuth = workspace.getConfiguration('netSuiteUpload').authentication;
+    const netSuiteOAuthKey = workspace.getConfiguration('netSuiteUpload').netSuiteKey;
 
     if (nlAuth && nlAuth.length > 0) {
         return workspace.getConfiguration('netSuiteUpload').authentication;
@@ -41,24 +41,24 @@ function getAuthHeader(method, data) {
             },
             signature_method: 'HMAC-SHA256',
             realm: workspace.getConfiguration('netSuiteUpload').realm,
-            hash_function: function (base_string, key) {
+            hash_function: (base_string, key) => {
                 return createHmac('sha256', key).update(base_string).digest('base64');
             }
         };
 
         const oauth = OAuth(opts);
 
-        var token = {
+        const token = {
             key: workspace.getConfiguration('netSuiteUpload').netSuiteKey,
             secret: workspace.getConfiguration('netSuiteUpload').netSuiteSecret
         };
-        var restletUrl = workspace.getConfiguration('netSuiteUpload').restlet;
-        var url_parts = parse(restletUrl, true);
+        const restletUrl = new URL(workspace.getConfiguration('netSuiteUpload').restlet);
+        const url_parts = parse(restletUrl, true);
 
         // Build up the data payload to sign.
         // qs will contain the script and deploy params.
-        var qs = url_parts.query;
-        var mergedData;
+        const qs = url_parts.query;
+        let mergedData;
         if (method === 'GET' || method === 'DELETE') {
             // For GETs and DELETES, data ends up in the querystring.
             Object.assign(qs, data);
@@ -68,7 +68,7 @@ function getAuthHeader(method, data) {
             // so we don't need it in the oauth signature.
             mergedData = qs;
         }
-        var header = oauth.toHeader(oauth.authorize({
+        const header = oauth.toHeader(oauth.authorize({
             method: method,
             url: restletUrl,
             data: mergedData
@@ -92,14 +92,14 @@ export function doesRestletNeedUpdating(needsUpdating) {
 }
 
 function getData(type, objectPath, callback) {
-    doesRestletNeedUpdating(function (needsUpdating, err) {
+    doesRestletNeedUpdating((needsUpdating, err) => {
         if (needsUpdating) {
             callback(BAD_VERSION_ERROR, err);
             return;
         }
 
-        var relativeName = getRelativePath(objectPath);
-        var data = {
+        const relativeName = getRelativePath(objectPath);
+        const data = {
             type: type,
             name: relativeName
         };
@@ -114,7 +114,7 @@ function getData(type, objectPath, callback) {
 }
 
 function getRestletVersion(callback) {
-    var data = {
+    const data = {
         type: "version"
     };
     superAgent.get(workspace.getConfiguration("netSuiteUpload").restlet)
@@ -132,14 +132,14 @@ export function postFile(file, content, callback) {
 }
 
 function postData(type, objectPath, content, callback) {
-    doesRestletNeedUpdating(function (needsUpdating, err) {
+    doesRestletNeedUpdating((needsUpdating, err) => {
         if (needsUpdating) {
             callback(BAD_VERSION_ERROR, err);
             return;
         }
 
-        var relativeName = getRelativePath(objectPath);
-        var data = {
+        const relativeName = getRelativePath(objectPath);
+        const data = {
             type: type,
             name: relativeName,
             content: content
@@ -161,13 +161,13 @@ export function deleteFile(file, callback) {
 
 function deleteData(type, objectPath, callback) {
 
-    doesRestletNeedUpdating(function (needsUpdating, err) {
+    doesRestletNeedUpdating((needsUpdating, err) => {
         if (needsUpdating) {
             callback(BAD_VERSION_ERROR, err);
             return;
         }
-        var relativeName = getRelativePath(objectPath);
-        var data = {
+        const relativeName = getRelativePath(objectPath);
+        const data = {
             type: type,
             name: relativeName
         };
@@ -180,16 +180,3 @@ function deleteData(type, objectPath, callback) {
             });
     });
 }
-
-// const _getRelativePath = getRelativePath;
-// export { _getRelativePath as getRelativePath };
-// const _getFile = getFile;
-// export { _getFile as getFile };
-// const _postFile = postFile;
-// export { _postFile as postFile };
-// const _deleteFile = deleteFile;
-// export { _deleteFile as deleteFile };
-// const _getDirectory = getDirectory;
-// export { _getDirectory as getDirectory };
-// const _getRestletVersion = getRestletVersion;
-// export { _getRestletVersion as getRestletVersion };

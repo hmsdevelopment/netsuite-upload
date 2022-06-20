@@ -12,9 +12,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/hmsmarketingservices/netsuite-upload.git"
+    "url": "https://github.com/hmsdevelopment/netsuite-upload.git"
   },
-  "icon": "/img/icon.png",
+  "icon": "img/icon.png",
   "keywords": [
     "netsuite",
     "netsuite upload",
