@@ -2,20 +2,19 @@
   "name": "netsuite-upload",
   "displayName": "NetSuite Upload",
   "description": "Upload and download NetSuite SuiteScript files and folders.",
-  "version": "1.2.4",
-  "publisher": "nsupload-org",
+  "version": "1.0.0",
+  "publisher": "hmsdevelopment",
   "engines": {
     "vscode": "^1.68.0"
   },
   "categories": [
     "Other"
   ],
-  "homepage": "https://github.com/netsuite-upload-org/netsuite-upload",
   "repository": {
     "type": "git",
-    "url": "https://github.com/netsuite-upload-org/netsuite-upload"
+    "url": "https://github.com/hmsmarketingservices/netsuite-upload.git"
   },
-  "icon": "img/icon.png",
+  "icon": "/img/icon.png",
   "keywords": [
     "netsuite",
     "netsuite upload",
