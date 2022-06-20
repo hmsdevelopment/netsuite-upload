@@ -1,4 +1,4 @@
-function getSuiteScriptDependecies() {
+function getSuiteScriptDependencies() {
     return [
         { path: 'N/auth',               param: 'auth' },
         { path: 'N/cache',              param: 'cache' },
@@ -35,4 +35,4 @@ function getSuiteScriptDependecies() {
     ];
 }
 
-exports.getSuiteScriptDependecies = getSuiteScriptDependecies;
+exports.getSuiteScriptDependencies = getSuiteScriptDependencies;

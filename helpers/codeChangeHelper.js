@@ -95,7 +95,7 @@ function replaceStringRange(source, replacement, from, to) {
     return source.substring(0, from) + replacement + source.substring(to);
 }
 
-function getUpdatedFunctionParams(newDependecyParam, oldString) {
+function getUpdatedFunctionParams(newDependencyParam, oldString) {
     let newString = oldString;
     
     if (oldString.indexOf('function') != -1) {
@@ -103,7 +103,7 @@ function getUpdatedFunctionParams(newDependecyParam, oldString) {
         let toIndex = oldString.indexOf(')');
         let oldParams = oldString.substring(fromIndex, toIndex);
         let newParams = oldParams.trim();
-        newParams = newParams.length > 0 ? newParams + ', ' + newDependecyParam : newDependecyParam;
+        newParams = newParams.length > 0 ? newParams + ', ' + newDependencyParam : newDependencyParam;
         
         newString = replaceStringRange(oldString, newParams, fromIndex, toIndex);
     }
@@ -111,13 +111,13 @@ function getUpdatedFunctionParams(newDependecyParam, oldString) {
         let params = oldString.split("=>")[0].trim();
 
         if (params.indexOf('(') == -1) { // "param => "
-            newString = '(' + params + ', ' + newDependecyParam + ') => ';
+            newString = '(' + params + ', ' + newDependencyParam + ') => ';
         } else {
             let fromIndex = oldString.indexOf('(') + 1;
             let toIndex = oldString.indexOf(')');
             let oldParams = oldString.substring(fromIndex, toIndex);
             let newParams = oldParams.trim();
-            newParams = newParams.length > 0 ? newParams + ', ' + newDependecyParam : newDependecyParam;
+            newParams = newParams.length > 0 ? newParams + ', ' + newDependencyParam : newDependencyParam;
         
             newString = replaceStringRange(oldString, newParams, fromIndex, toIndex);
         }
@@ -126,18 +126,18 @@ function getUpdatedFunctionParams(newDependecyParam, oldString) {
     return newString;
 }
 
-function getUpdatedDepPath(newDependecyPath, oldString) {
+function getUpdatedDepPath(newDependencyPath, oldString) {
     if (oldString) {
         let fromIndex = oldString.indexOf('[') + 1;
         let toIndex = oldString.indexOf(']');
         let oldPaths = oldString.substring(fromIndex, toIndex);
         let newPaths = oldPaths.trim();
-        newPaths = newPaths.length > 0 ? newPaths + ", '" + newDependecyPath + "'" : "'" + newDependecyPath + "'";
+        newPaths = newPaths.length > 0 ? newPaths + ", '" + newDependencyPath + "'" : "'" + newDependencyPath + "'";
 
         return replaceStringRange(oldString, newPaths, fromIndex, toIndex);
     } 
     
-    return "['" + newDependecyPath + "']";
+    return "['" + newDependencyPath + "']";
 }
 
 async function updateDocument(editor, startLine, startChar, endLine, endChar, content) {

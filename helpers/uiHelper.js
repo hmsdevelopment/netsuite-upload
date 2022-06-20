@@ -1,13 +1,13 @@
-let vscode = require('vscode');
+import { window } from 'vscode';
 
 function askForCustomDependency() {
     var depPath;
 
-    return vscode.window.showInputBox({prompt: 'Please type the dependency path'})
+    return window.showInputBox({prompt: 'Please type the dependency path'})
         .then(path => {
             depPath = path;
             
-            return vscode.window.showInputBox({prompt: 'Please type the dependecy parameter name'})
+            return window.showInputBox({prompt: 'Please type the dependency parameter name'})
                 .then(param => {
                     return {
                         depPath: depPath,
@@ -17,9 +17,11 @@ function askForCustomDependency() {
         })
 }
 
-function showListOfNetSuiteDependecies(list) {
-    return vscode.window.showQuickPick(list);
+function showListOfNetSuiteDependencies(list) {    
+    return window.showQuickPick(list);
 }
 
-exports.askForCustomDependency = askForCustomDependency;
-exports.showListOfNetSuiteDependecies = showListOfNetSuiteDependecies;
+const _askForCustomDependency = askForCustomDependency;
+export { _askForCustomDependency as askForCustomDependency };
+const _showListOfNetSuiteDependencies = showListOfNetSuiteDependencies;
+export { _showListOfNetSuiteDependencies as showListOfNetSuiteDependencies };

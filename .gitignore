@@ -1,2 +1,6 @@
 node_modules
 *.vsix
+
+.history
+node_modules
+netsuite-upload-1.2.4.vsix
