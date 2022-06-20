@@ -7,7 +7,6 @@ let uiHelper = require("../helpers/uiHelper");
 let netsuiteList = require("../helpers/netsuiteList");
 let _ = require("underscore");
 
-//TEST COMMENT
 export function getRestletVersion() {
     nsRestClient.getRestletVersion(function (err, res) {
         if (
