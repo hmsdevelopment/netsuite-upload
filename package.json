@@ -197,7 +197,7 @@
     "mocha": "^6.2.0",
     "typescript": "^3.5.3",
     "webpack": "^4.38.0",
-    "webpack-cli": "^3.3.6"
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {
     "compare-versions": "^3.5.0",
